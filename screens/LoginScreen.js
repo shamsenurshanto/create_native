@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import {
   SafeAreaView,
@@ -6,6 +7,10 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -15,34 +20,35 @@ const LoginScreen = () => {
     // Handle login logic here
     console.log(`Username: ${username}, Password: ${password}`);
   };
-  let [employeeName, setEmployeeName] = useState("");
-
-  let createEmployee = (username,password) => {
-    fetch(`https://smoggy-toad-fedora.cyclic.app/api/auth/login`, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        userEmailPhone:username,
+  const obj = {
+    userEmailPhone:username,
        userPass:password
-    })
-    })
-    .then(res => {
-      console.log(res.status);
-      console.log(res.headers);
-      return res.json();
-    })
-    .then(
-      (result) => {
-        console.log(result);
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
+  }
+  const [data, setData] = useState({});
+
+  
+  let [employeeName, setEmployeeName] = useState("");
+//  it is function
+  let createEmployee = async (username,password) => {
+    console.log(obj)
+    try {
+      setData(obj)
+      const response = await axios.post('https://smoggy-toad-fedora.cyclic.app/api/auth/login', data);
+      console.log(response.data);
+
+      
+        navigation.navigate('Screen_B');
+      
+
+    } catch (error) {
+      console.error(error);
+    }
+     
+
   };
   return (
+
+    
     <SafeAreaView style={styles.container}>
       <TextInput
         style={styles.input}
